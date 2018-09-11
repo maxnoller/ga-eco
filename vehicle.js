@@ -10,44 +10,20 @@ class Vehicle {
 
     this.health = 1;
 
-    this.dna = [];
-    if(dna === undefined){
-    //Food Weight
-    this.dna[0] = random(-5, 5);
-    //Poison weight
-    this.dna[1] = random(-5, 5);
-    //Food perception
-    this.dna[2] = random(0, 100);
-    //Poison perception
-    this.dna[3] = random(0, 100);
-    //low hp poison evasion
-    this.dna[4] = random(-5,5)
-  } else {
-    this.dna[0] = dna[0];
-    if(random(1) < mutation_rate){
-      this.dna[0] += random(-0.1, 0.1);
+    if(dna){
+      this.dna = new DNA(dna);
+      this.dna.mutate();
+    } else {
+      this.dna = new DNA();
     }
-    this.dna[1] = dna[1];
-    if(random(1) < mutation_rate){
-      this.dna[1] += random(-0.1, 0.1);
-    }
-    this.dna[2] = dna[2];
-    if(random(1) < mutation_rate){
-      this.dna[2] += random(-10, 10);
-    }
-    this.dna[3] = dna[3];
-    if(random(1) < mutation_rate){
-      this.dna[3] += random(-10, 10);
-    }
-    this.dna[4] = dna[4];
-  }
   }
   update() {
-    this.health -= 0.005;
+    let food_consumption = 0.002;
+    this.health -= food_consumption*this.dna.max_speed.value;
     // Update velocity
     this.velocity.add(this.acceleration);
     // Limit speed
-    this.velocity.limit(this.maxspeed);
+    this.velocity.limit(this.dna.max_speed.value);
     this.position.add(this.velocity);
     // Reset accelerationelertion to 0 each cycle
     this.acceleration.mult(0);
@@ -65,7 +41,7 @@ class Vehicle {
     var desired = p5.Vector.sub(target, this.position); // A vector pointing from the location to the target
 
     // Scale to maximum speed
-    desired.setMag(this.maxspeed);
+    desired.setMag(this.dna.max_speed.value);
 
     // Steering = Desired minus velocity
     var steer = p5.Vector.sub(desired, this.velocity);
@@ -75,11 +51,11 @@ class Vehicle {
   }
 
   behaviors(good, bad){
-    var steerG = this.eat(good, 0.3, this.dna[2]);
-    var steerB = this.eat(bad, -0.75, this.dna[3]);
+    var steerG = this.eat(good, 0.3, this.dna.food_perception.value);
+    var steerB = this.eat(bad, -0.75, this.dna.poison_perception.value);
 
-    steerG.mult(this.dna[0]);
-    steerB.mult(this.dna[1]*((1-this.hp)*this.dna[4]));
+    steerG.mult(this.dna.food_weight.value);
+    steerB.mult(this.dna.poison_weight.value);
 
     this.applyForce(steerG);
     this.applyForce(steerB);
@@ -99,7 +75,7 @@ class Vehicle {
     for (var i = list.length-1; i>=0 ; i--){
       var d = this.position.dist(list[i]);
 
-      if (d < this.maxspeed){
+      if (d < this.dna.max_speed.value){
         list.splice(i,1);
         this.health += nutrition;
       } else {
@@ -150,11 +126,11 @@ generate_debug_visuals(){
   if(show_debug_information){
     stroke(0,255,0);
     noFill();
-    line(0,0,0,-this.dna[0]*20);
-    ellipse(0,0,this.dna[2]*2)
-    stroke(255,0,0)
-    line(0,0,0,-this.dna[1]*20)
-    ellipse(0,0,this.dna[3]*2)
+    line(0,0,0,-this.dna.food_weight.value*20);
+    ellipse(0,0,this.dna.food_perception.value*2);
+    stroke(255,0,0);
+    line(0,0,0,-this.dna.poison_weight.value*20);
+    ellipse(0,0,this.dna.poison_perception.value*2);
   }
 }
 
