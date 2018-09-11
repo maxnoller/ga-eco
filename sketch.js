@@ -14,9 +14,12 @@
 let vehicles = [];
 let food = [];
 let poison = [];
+let show_debug_information = true;
 
 function setup() {
   createCanvas(640, 360);
+  checkbox = createCheckbox('Debug Information', true);
+  checkbox.changed(debugInformationChanged);
   for (var i = 0; i<10; i++){
     var x = random(width);
     var y = random(height);
@@ -81,4 +84,7 @@ function draw() {
 
 
   }
+}
+function debugInformationChanged(){
+  show_debug_information = this.checked();
 }

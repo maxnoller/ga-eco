@@ -1,12 +1,12 @@
 class Vehicle {
   constructor(x, y, dna) {
-    var mutation_rate = 0.001;
+    var mutation_rate = 0.01;
     this.acceleration = createVector(0, 0);
     this.velocity = createVector(0, -2);
     this.position = createVector(x, y);
     this.r = 4;
     this.maxspeed = 5;
-    this.maxforce = 0.4;
+    this.maxforce = 0.3;
 
     this.health = 1;
 
@@ -20,6 +20,8 @@ class Vehicle {
     this.dna[2] = random(0, 100);
     //Poison perception
     this.dna[3] = random(0, 100);
+    //low hp poison evasion
+    this.dna[4] = random(-5,5)
   } else {
     this.dna[0] = dna[0];
     if(random(1) < mutation_rate){
@@ -37,6 +39,7 @@ class Vehicle {
     if(random(1) < mutation_rate){
       this.dna[3] += random(-10, 10);
     }
+    this.dna[4] = dna[4];
   }
   }
   update() {
@@ -76,7 +79,7 @@ class Vehicle {
     var steerB = this.eat(bad, -0.75, this.dna[3]);
 
     steerG.mult(this.dna[0]);
-    steerB.mult(this.dna[1]);
+    steerB.mult(this.dna[1]*((1-this.hp)*this.dna[4]));
 
     this.applyForce(steerG);
     this.applyForce(steerB);
@@ -143,13 +146,8 @@ class Vehicle {
     }
 }
 
-  display() {
-    // Draw a triangle rotated in the direction of velocity
-    var angle = this.velocity.heading() + PI / 2;
-    push();
-    translate(this.position.x, this.position.y);
-    rotate(angle);
-
+generate_debug_visuals(){
+  if(show_debug_information){
     stroke(0,255,0);
     noFill();
     line(0,0,0,-this.dna[0]*20);
@@ -157,7 +155,17 @@ class Vehicle {
     stroke(255,0,0)
     line(0,0,0,-this.dna[1]*20)
     ellipse(0,0,this.dna[3]*2)
+  }
+}
 
+  display() {
+    // Draw a triangle rotated in the direction of velocity
+    var angle = this.velocity.heading() + PI / 2;
+    push();
+    translate(this.position.x, this.position.y);
+    rotate(angle);
+
+    this.generate_debug_visuals();
 
     var green = color(0,255,0);
     var red = color(255,0,0);
