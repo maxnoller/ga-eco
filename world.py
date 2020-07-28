@@ -10,16 +10,18 @@ class World:
     def __init__(self, width, height, nrof_tiles):
         self.tile_size = height/nrof_tiles
         self.world = []
-        self.create_tiles(width, height)
+        self.width = nrof_tiles
+        self.height = nrof_tiles
+        self.create_tiles()
 
         self.world[5][5] = WaterTile() #this just for testing 
     
-    def create_tiles(self, width, height):
-        for x in range(width):
+    def create_tiles(self):
+        for x in range(self.width):
             y_list = []
-            for y in range(height):
+            for y in range(self.height):
                 tile = FoodTile(x,y, 100)
-                if x == (width-1) or x == 0 or y == 0 or y == (height-1):
+                if x == (self.width-1) or x == 0 or y == 0 or y == (self.height-1):
                     tile = BorderTile()
                 y_list.append(tile)
             self.world.append(y_list)

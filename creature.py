@@ -28,11 +28,11 @@ class Creature:
             self.current_food += 10
 
     def update(self, delta_time):
+        self.execute_brain()
         if self.current_food <= 0:
             self.health -= self.hunger_damage * (delta_time/1000)
             return
         self.current_food -= self.hunger * (delta_time/1000)
-        self.execute_brain()
 
     def get_current_tile(self):
         return self.world.get_tile(self.position[0], self.position[1])
