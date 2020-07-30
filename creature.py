@@ -44,8 +44,7 @@ class Creature:
                                                 color[2],
                                                 self.current_food,
                                                 self.health)
-        print(brain_output)
         self.rotation = brain_output[1]*180/3.1415 # output from rad to degree
-        self.walk(brain_output[0])
+        #self.walk(brain_output[0])
         if(brain_output[2] > 0.4):
             self.eat()

@@ -1,23 +1,23 @@
 import pygame
+import cProfile
 
 from gui import Gui
 from creature import Creature
 from world import World
 
 creatures = []
-
 def main_loop():
     done = False
-    creatures.append(Creature(100, 1, 1, world))
-    creatures.append(Creature(100, 1, 1, world))
-    creatures.append(Creature(100, 1, 1, world))
+    for i in range(1):
+        creatures.append(Creature(100, 1, 1, world))
 
     last_time = 0;
     while not done:
         clock.tick(30)
+        print(clock.get_fps())
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                        done = True
+                    done = True
 
         current_ticks = pygame.time.get_ticks()
         delta_time = current_ticks - last_time
@@ -39,5 +39,5 @@ if __name__ == "__main__":
     world = World(800, 800, 100)
     gui = Gui(800, 800, creatures, world)
     clock = pygame.time.Clock()
-    main_loop()
+    cProfile.run("main_loop()")
 
