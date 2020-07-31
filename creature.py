@@ -16,6 +16,14 @@ class Creature:
         self.world = world
         self.brain = Brain(self)
         self.speed_modifier = 2
+        self.alive = True
+
+    def is_alive(self):
+        return self.alive
+
+    def get_color(self):
+        color_value = 100//self.health*255/2
+        return (255, color_value, color_value)
 
     def walk(self, speed):
         walk_cords = Gui.pol2cart(speed*self.speed_modifier, self.rotation)
@@ -28,11 +36,17 @@ class Creature:
             self.current_food += 10
 
     def update(self, delta_time):
+        if not self.alive: return
         self.execute_brain()
         if self.current_food <= 0:
-            self.health -= self.hunger_damage * (delta_time/1000)
+            self.change_health(-self.hunger_damage * (delta_time/1000))
             return
         self.current_food -= self.hunger * (delta_time/1000)
+
+    def change_health(self, amount):
+        self.health += amount
+        if(self.health <= 0):
+            self.alive = False
 
     def get_current_tile(self):
         return self.world.get_tile(self.position[0], self.position[1])
@@ -45,6 +59,6 @@ class Creature:
                                                 self.current_food,
                                                 self.health)
         self.rotation = brain_output[1]*180/3.1415 # output from rad to degree
-        #self.walk(brain_output[0])
+        self.walk(brain_output[0])
         if(brain_output[2] > 0.4):
             self.eat()

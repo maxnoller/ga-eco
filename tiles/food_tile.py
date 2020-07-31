@@ -24,5 +24,5 @@ class FoodTile(WorldTile):
         return False
 
     def __str__(self):
-        return "Food Tile food:" + str(self.food)
+        return "FT"
 

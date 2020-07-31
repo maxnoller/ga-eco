@@ -13,11 +13,6 @@ class World:
         self.width = nrof_tiles
         self.height = nrof_tiles
         self.create_tiles()
-
-        self.world[1][1] = WaterTile() #this just for testing 
-        #self.world[1][3] = WaterTile()
-        self.world[1][5] = WaterTile()
-        #self.world[48][48] = WaterTile()
     
     def create_tiles(self):
         for x in range(self.width):
@@ -31,18 +26,23 @@ class World:
 
     def get_tile(self, position):
         x = position[0]//self.tile_size
-        print(x)
-        print(self.tile_size)
-        print(position[0])
         y = position[1]//self.tile_size
         return self.world[int(x)][int(y)]
 
     def try_eat(self, position):
         current_tile = self.get_tile(position)
-        print(current_tile)
         if isinstance(current_tile, FoodTile):
             return current_tile.eat()
         return False
 
     def can_move(self, position):
         return not isinstance(self.get_tile(position), BorderTile)
+
+    def __str__(self):
+        return_string = """World {} x {} tile size: {} \n""".format(self.width,
+                                                                self.height,
+                                                                self.tile_size)
+        for col in self.world:
+            line_str = [str(element) + " " for element in col]
+            return_string = return_string + ("".join(line_str)+"\n")
+        return return_string

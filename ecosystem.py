@@ -8,10 +8,11 @@ from world import World
 creatures = []
 def main_loop():
     done = False
-    for i in range(1):
-        creatures.append(Creature(100, 1, 1, world))
+    for i in range(100):
+        creatures.append(Creature(100, 10, 1, world))
 
     last_time = 0;
+
     while not done:
         clock.tick(30)
         print(clock.get_fps())

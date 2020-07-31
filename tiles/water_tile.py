@@ -7,3 +7,5 @@ class WaterTile(WorldTile):
     def get_color(self):
         return (0, 0, 255)
 
+    def __str__(self):
+        return "WT"
