@@ -4,20 +4,18 @@ import cProfile
 from gui import Gui
 from creature import Creature
 from world import World
+from creature_manager import CreatureManager
 
-creatures = []
 def main_loop():
     done = False
-    for i in range(100):
-        creatures.append(Creature(100, 10, 1, world))
+    creatures.create_creatures(100)
 
-    last_time = 0;
-
+    last_time = 0
     while not done:
-        clock.tick(30)
-        print(clock.get_fps())
+        clock.tick(60)
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    print(clock.get_fps())
                     done = True
 
         current_ticks = pygame.time.get_ticks()
@@ -32,13 +30,14 @@ def main_loop():
         pygame.display.flip()
 
 def update_creatures(delta_time):
-    for creature in creatures:
+    for creature in creatures.creatures:
         creature.update(delta_time)
 
 if __name__ == "__main__":
     pygame.init()
-    world = World(800, 800, 100)
-    gui = Gui(800, 800, creatures, world)
+    world = World(600, 600, 100)
+    creatures = CreatureManager(world)
+    gui = Gui(1000, 600, creatures.creatures, world)
     clock = pygame.time.Clock()
     cProfile.run("main_loop()")
 

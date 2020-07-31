@@ -5,7 +5,7 @@ from gui import Gui
 from brain.creature_brain import Brain
 
 class Creature:
-    def __init__(self, max_health, hunger_damage, hunger, world):
+    def __init__(self, max_health, hunger_damage, hunger, world, handle_death):
         #hunger damage per second
         self.health = max_health
         self.hunger_damage = hunger_damage
@@ -16,14 +16,11 @@ class Creature:
         self.world = world
         self.brain = Brain(self)
         self.speed_modifier = 2
-        self.alive = True
-
-    def is_alive(self):
-        return self.alive
+        self.kill = handle_death
 
     def get_color(self):
-        color_value = 100//self.health*255/2
-        return (255, color_value, color_value)
+        color_value = (self.health/100)*255
+        return (color_value, color_value/2, color_value/2)
 
     def walk(self, speed):
         walk_cords = Gui.pol2cart(speed*self.speed_modifier, self.rotation)
@@ -36,7 +33,6 @@ class Creature:
             self.current_food += 10
 
     def update(self, delta_time):
-        if not self.alive: return
         self.execute_brain()
         if self.current_food <= 0:
             self.change_health(-self.hunger_damage * (delta_time/1000))
@@ -46,7 +42,7 @@ class Creature:
     def change_health(self, amount):
         self.health += amount
         if(self.health <= 0):
-            self.alive = False
+            self.kill(self)
 
     def get_current_tile(self):
         return self.world.get_tile(self.position[0], self.position[1])

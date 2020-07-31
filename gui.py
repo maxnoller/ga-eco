@@ -1,6 +1,7 @@
 import pygame
 import math
 import numpy as np
+from numba import jit
 
 from world import World
 
@@ -14,7 +15,6 @@ class Gui:
         
     def draw_creatures(self):
         for creature in self.creatures:
-            if not creature.is_alive(): return
             points = [(0, self.tile_size/2),
                       (-self.tile_size/2, -self.tile_size/2),
                       (+self.tile_size/2, -self.tile_size/2)]
@@ -30,6 +30,7 @@ class Gui:
             return_coordinates.append((center_point[0]+x, center_point[1]+y))
         return return_coordinates
 
+
     @staticmethod
     def convert_creature_cords(coordinates, alpha):
         return_coordinates = []
@@ -39,12 +40,14 @@ class Gui:
         return return_coordinates
 
     @staticmethod
+    @jit(nopython=True, fastmath=True)
     def cart2pol(x, y):
         rho = np.sqrt(x**2 + y**2)
         phi = np.arctan2(y, x)
         return(rho, phi)
 
     @staticmethod
+    @jit(nopython=True, fastmath=True)
     def pol2cart(rho, phi):
         x = rho * np.cos(phi)
         y = rho * np.sin(phi)

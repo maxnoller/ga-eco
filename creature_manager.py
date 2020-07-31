@@ -1,13 +1,17 @@
-from .creature import Creature
+from creature import Creature
 
 class CreatureManager:
-    def __init__(self, width, height):
-        self.dimensions = (width, height)
+    def __init__(self, world):
+        self.world = world
         self.creatures = []
 
-    def create_creatures(self, nrof_creatures, random_positions=True):
+    def create_creatures(self, nrof_creatures):
         for i in range(nrof_creatures):
-            if random_
+           self.create_creature()
 
-    def create_creature(self, position):
-        self.creatures += Creature()
+    def create_creature(self):
+        creature = Creature(100, 10, 1, self.world, self.handle_death)
+        self.creatures.append(creature)
+
+    def handle_death(self, creature):
+        self.creatures.remove(creature)
