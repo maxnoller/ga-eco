@@ -13,12 +13,17 @@ class World:
         self.width = nrof_tiles
         self.height = nrof_tiles
         self.create_tiles()
+
+    def update(self, delta_time):
+        for x in self.world:
+            for tile in x:
+                tile.update(delta_time)
     
     def create_tiles(self):
         for x in range(self.width):
             y_list = []
             for y in range(self.height):
-                tile = FoodTile(x,y, 100)
+                tile = FoodTile(100, 5)
                 if x == (self.width-1) or x == 0 or y == 0 or y == (self.height-1):
                     tile = BorderTile()
                 y_list.append(tile)

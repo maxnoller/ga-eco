@@ -15,7 +15,7 @@ class Creature:
         self.rotation = 90
         self.world = world
         self.brain = Brain(self)
-        self.speed_modifier = 2
+        self.speed_modifier = 1
         self.kill = handle_death
 
     def get_color(self):
@@ -31,10 +31,13 @@ class Creature:
     def eat(self):
         if self.world.try_eat(self.position):
             self.current_food += 10
+            if(self.current_food > 100):
+                self.current_food = 100
 
     def update(self, delta_time):
         self.execute_brain()
         if self.current_food <= 0:
+            self.food = 0
             self.change_health(-self.hunger_damage * (delta_time/1000))
             return
         self.current_food -= self.hunger * (delta_time/1000)

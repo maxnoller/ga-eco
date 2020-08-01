@@ -12,12 +12,21 @@ class CreatureView:
     def draw_creatures(self):
         """Draw all the creatures currently registered to the creature manager
            onto the screen according to their attributes"""
+        self.creature_rects = []
         for creature in self.creature_manager.get_creatures():
             points = [(0, self.creature_size/2),
                       (-self.creature_size/2, -self.creature_size/2),
                       (+self.creature_size/2, -self.creature_size/2)]
             coordinates = GuiHelperFunctions.convert_creature_cords(points, creature.rotation)
-            pygame.draw.polygon(self.screen,
+            rect = pygame.draw.polygon(self.screen,
                                 creature.get_color(),
                                 GuiHelperFunctions.convert_rel_to_abs_cords(coordinates,
                                                                             creature.position))
+            self.creature_rects.append(rect)
+    
+    def check_if_creature_clicked(self, x, y):
+        for idx, rect in enumerate(self.creature_rects):
+            if rect.collidepoint(x, y):
+                return self.creature_manager.get_creatures()[idx]
+    
+

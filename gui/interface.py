@@ -1,5 +1,8 @@
 import pygame
 import pygame.freetype
+import inspect
+
+from creature import Creature
 
 class Interface:
     """The interface class draws an interfaced used to retreive debug
@@ -12,18 +15,26 @@ class Interface:
         self.font = pygame.freetype.SysFont("Calibri", 24)
         self.clock = clock
 
-    def draw_interface(self):
+    def draw_interface(self, currently_selected):
         """Draws the whole interface on the display"""
         pygame.draw.rect(self.display,
                          (255, 255, 255),
                          self.rect)
+        if isinstance(currently_selected, Creature):
+            self.draw_creature_details(currently_selected)
         self.draw_fps()
 
     def draw_fps(self):
         """Draw a fps counter obtained from pygame onto the interface"""
-        position = (self.rect.topright[0]-40, self.rect.topright[1])
+        position = (self.rect.topright[0]-40, self.rect.topright[1]+10)
         self.font.render_to(self.display, position, str(int(self.clock.get_fps())))
 
     def draw_creature_details(self, creature):
         """Displays details for the creature currently selected"""
+        position_title = (self.rect.topleft[0]+10, self.rect.topleft[1]+10)
+        position_food = (self.rect.topleft[0]+10, self.rect.topleft[1]+30)
+        position_health = (self.rect.topleft[0]+10, self.rect.topleft[1]+50)
+        self.font.render_to(self.display, position_title, "Creature")
+        self.font.render_to(self.display, position_food, "Food: "+str(int(creature.current_food))+"/100")
+        self.font.render_to(self.display, position_health, "Health: "+str(int(creature.health))+"/100")
         return
