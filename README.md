@@ -1,7 +1,7 @@
-GA-ECO \n
-Todo: \n
-  Optimize food tile calculations \n
-    Ideas: \n
-      - Chunk System \n
-      - optimize calculations with numpy 
+GA-ECO  
+Todo:  
+  Optimize food tile calculations  
+    Ideas:  
+      - Chunk System  
+      - optimize calculations with numpy  
    
