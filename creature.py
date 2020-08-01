@@ -11,7 +11,7 @@ class Creature:
         self.hunger_damage = hunger_damage
         self.hunger = hunger
         self.current_food = 100
-        self.position = (100,100)
+        self.position = (100, 100)
         self.rotation = 90
         self.world = world
         self.brain = Brain(self)
@@ -50,11 +50,23 @@ class Creature:
     def get_current_tile(self):
         return self.world.get_tile(self.position[0], self.position[1])
 
+    def see(self):
+        tiles = []
+        tiles.append(self.world.get_tile(self.position).get_color())
+        polPos = GuiHelperFunctions.cart2pol(self.position[0], self.position[1])
+        tiles.append(self.world.get_tile
+                    (GuiHelperFunctions.pol2cart(polPos[0]+self.world.tile_size,
+                                                 polPos[1])).get_color())
+        tiles.append(self.world.get_tile
+            (GuiHelperFunctions.pol2cart(polPos[0]+self.world.tile_size,
+                                            polPos[1]-45)).get_color())
+        tiles.append(self.world.get_tile
+                    (GuiHelperFunctions.pol2cart(polPos[0]+self.world.tile_size,
+                                                 polPos[1]+45)).get_color())
+        return tiles
+
     def execute_brain(self):
-        color = self.world.get_tile(self.position).get_color()
-        brain_output = self.brain.process_input(color[0],
-                                                color[1],
-                                                color[2],
+        brain_output = self.brain.process_input(self.see(),
                                                 self.current_food,
                                                 self.health)
         self.rotation = brain_output[1]*180/3.1415 # output from rad to degree

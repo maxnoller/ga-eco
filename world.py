@@ -30,9 +30,11 @@ class World:
             self.world.append(y_list)
 
     def get_tile(self, position):
-        x = position[0]//self.tile_size
-        y = position[1]//self.tile_size
-        return self.world[int(x)][int(y)]
+        x = int(position[0]//self.tile_size)
+        y = int(position[1]//self.tile_size)
+        if(x < 0 or x > self.width-1 or y < 0 or y > self.height-1):
+            return BorderTile()
+        return self.world[x][y]
 
     def try_eat(self, position):
         current_tile = self.get_tile(position)

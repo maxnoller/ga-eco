@@ -23,7 +23,7 @@ class FoodTile(WorldTile):
         self.update_color()
 
     def update_color(self):
-        self.color = (0, self.food * 255 // 100, 0)
+        self.color = (0, self.food * 250 // 100 + 5, 0)
 
     def eat(self):
         if(self.food >= self.food_portion):
