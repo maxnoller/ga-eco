@@ -8,7 +8,8 @@ class FoodTile(WorldTile):
         self.update_color()
 
     def update(self, delta_time):
-        self.change_food(delta_time//1000 * self.regeneration_rate)
+        if(self.food == 100): return
+        self.change_food(delta_time/1000 * self.regeneration_rate)
         
     def get_color(self):
         return self.color
