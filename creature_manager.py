@@ -15,3 +15,6 @@ class CreatureManager:
 
     def handle_death(self, creature):
         self.creatures.remove(creature)
+
+    def get_creatures(self):
+        return self.creatures

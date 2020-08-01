@@ -1,7 +1,7 @@
 import numpy as np
 
 from dna import DNA
-from gui import Gui
+from gui.helper_functions import GuiHelperFunctions
 from brain.creature_brain import Brain
 
 class Creature:
@@ -23,7 +23,7 @@ class Creature:
         return (color_value, color_value/2, color_value/2)
 
     def walk(self, speed):
-        walk_cords = Gui.pol2cart(speed*self.speed_modifier, self.rotation)
+        walk_cords = GuiHelperFunctions.pol2cart(speed*self.speed_modifier, self.rotation)
         if(self.world.can_move((self.position[0] + walk_cords[0], self.position[1] + walk_cords[1]))):
             self.position = (self.position[0] + walk_cords[0], self.position[1] + walk_cords[1])
             self.current_food -= speed

@@ -1,7 +1,7 @@
 import pygame
 import cProfile
 
-from gui import Gui
+from gui.gui import Gui
 from creature import Creature
 from world import World
 from creature_manager import CreatureManager
@@ -24,8 +24,7 @@ def main_loop():
 
         update_creatures(delta_time)
 
-        gui.draw_world()
-        gui.draw_creatures()
+        gui.draw()
 
         pygame.display.flip()
 
@@ -37,7 +36,7 @@ if __name__ == "__main__":
     pygame.init()
     world = World(600, 600, 100)
     creatures = CreatureManager(world)
-    gui = Gui(1000, 600, creatures.creatures, world)
     clock = pygame.time.Clock()
+    gui = Gui(1000, 600, creatures, world, clock)
     cProfile.run("main_loop()")
 
