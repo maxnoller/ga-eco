@@ -14,7 +14,7 @@ class CreatureManager:
 
     def create_creature(self):
         """create a creature with default parameters"""
-        creature = Creature(100, 10, 10, self.world, self.handle_death, self.create_offspring)
+        creature = Creature(100, 10, 3, self.world, self.handle_death, self.create_offspring)
         self.register(creature)
         return creature
 

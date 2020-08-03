@@ -16,7 +16,7 @@ class Creature:
         self.rotation = 90
         self.world = world
         self.brain = Brain(self)
-        self.speed_modifier = 1
+        self.speed_modifier = 0.7
         self.kill = handle_death
         self.create_offspring = create_offspring
         self.reproduce_cooldown = 10
@@ -29,7 +29,7 @@ class Creature:
         walk_cords = GuiHelperFunctions.pol2cart(speed*self.speed_modifier, self.rotation)
         if(self.world.can_move((self.position[0] + walk_cords[0], self.position[1] + walk_cords[1]))):
             self.position = (self.position[0] + walk_cords[0], self.position[1] + walk_cords[1])
-            self.current_food -= speed
+            self.current_food -= speed * self.speed_modifier * 1.5
     
     def eat(self):
         if self.world.try_eat(self.position):

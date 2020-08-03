@@ -17,7 +17,7 @@ def main_loop():
     nrof_frames = 0
     while not done:
         nrof_frames+=1
-        clock.tick(60)
+        clock.tick(30)
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     print(nrof_frames/(time.time()-start_time))
