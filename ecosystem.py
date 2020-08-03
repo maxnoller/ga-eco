@@ -1,5 +1,6 @@
 import pygame
 import cProfile
+import time
 
 from gui.gui import Gui
 from creature import Creature
@@ -12,11 +13,14 @@ def main_loop():
 
     last_time = 0
     currently_selected = None
+    start_time = time.time()
+    nrof_frames = 0
     while not done:
+        nrof_frames+=1
         clock.tick(60)
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    print(clock.get_fps())
+                    print(nrof_frames/(time.time()-start_time))
                     done = True
                 elif event.type == pygame.MOUSEBUTTONUP:
                     pos = pygame.mouse.get_pos()
@@ -39,5 +43,5 @@ if __name__ == "__main__":
     creature_manager = CreatureManager(world)
     clock = pygame.time.Clock()
     gui = Gui(1000, 600, creature_manager, world, clock)
-    cProfile.run("main_loop()")
+    main_loop()
 
