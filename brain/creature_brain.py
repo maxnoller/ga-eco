@@ -3,9 +3,15 @@ import numpy as np
 from .neural_network import NeuralNetwork
 
 class Brain:
-    def __init__(self, creature):
-        self.network = NeuralNetwork(14, [10, 3])
-        self.creature = creature
+    def __init__(self, new_network=True):
+        self.network = NeuralNetwork()
+        self.network.create_layers(14, [10, 3])
+    
+    @staticmethod
+    def from_existing_brain(brain):
+        new_brain = Brain(new_network=False)
+        new_brain.network = NeuralNetwork.from_network(brain.network)
+        return new_brain
 
     def process_input(self, tiles, hunger, health):
         return self.network.forward_pass(np.array([tiles[0][0],

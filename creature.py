@@ -1,22 +1,25 @@
 import numpy as np
+import random
 
 from dna import DNA
 from gui.helper_functions import GuiHelperFunctions
 from brain.creature_brain import Brain
 
 class Creature:
-    def __init__(self, max_health, hunger_damage, hunger, world, handle_death):
+    def __init__(self, max_health, hunger_damage, hunger, world, handle_death, create_offspring):
         #hunger damage per second
         self.health = max_health
         self.hunger_damage = hunger_damage
         self.hunger = hunger
         self.current_food = 100
-        self.position = (100, 100)
+        self.position = (300, 300)
         self.rotation = 90
         self.world = world
         self.brain = Brain(self)
         self.speed_modifier = 1
         self.kill = handle_death
+        self.create_offspring = create_offspring
+        self.reproduce_cooldown = 10
 
     def get_color(self):
         color_value = (self.health/100)*255
@@ -37,10 +40,18 @@ class Creature:
     def update(self, delta_time):
         self.execute_brain()
         if self.current_food <= 0:
-            self.food = 0
+            self.current_food = 0
             self.change_health(-self.hunger_damage * (delta_time/1000))
             return
         self.current_food -= self.hunger * (delta_time/1000)
+        self.reproduce_cooldown -= (delta_time/1000)
+        self.try_reproduce()
+
+    def try_reproduce(self):
+        if self.reproduce_cooldown <= 0 and random.random() < 0.0005 and self.current_food >= 75:
+            self.current_food -= 50
+            self.create_offspring(self)
+            self.reproduce_cooldown = 10
 
     def change_health(self, amount):
         self.health += amount

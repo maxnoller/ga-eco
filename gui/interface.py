@@ -23,11 +23,16 @@ class Interface:
         if isinstance(currently_selected, Creature):
             self.draw_creature_details(currently_selected)
         self.draw_fps()
+        self.draw_nrof_creatures()
 
     def draw_fps(self):
         """Draw a fps counter obtained from pygame onto the interface"""
         position = (self.rect.topright[0]-40, self.rect.topright[1]+10)
         self.font.render_to(self.display, position, str(int(self.clock.get_fps())))
+
+    def draw_nrof_creatures(self):
+        position = (self.rect.topright[0]-40, self.rect.topright[1]+40)
+        self.font.render_to(self.display, position, str(len(self.creature_manager.get_creatures())))
 
     def draw_creature_details(self, creature):
         """Displays details for the creature currently selected"""
