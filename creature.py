@@ -4,9 +4,11 @@ import random
 from dna import DNA
 from gui.helper_functions import GuiHelperFunctions
 from brain.creature_brain import Brain
+from observer import Observable, Event
 
-class Creature:
-    def __init__(self, max_health, hunger_damage, hunger, world, handle_death, create_offspring):
+class Creature(Observable):
+    def __init__(self, max_health, hunger_damage, hunger, world):
+        super().__init__()
         #hunger damage per second
         self.health = max_health
         self.hunger_damage = hunger_damage
@@ -17,9 +19,9 @@ class Creature:
         self.world = world
         self.brain = Brain(self)
         self.speed_modifier = 0.7
-        self.kill = handle_death
-        self.create_offspring = create_offspring
         self.reproduce_cooldown = 10
+        self.death = Event()
+        self.reproduce = Event()
 
     def get_color(self):
         color_value = (self.health/100)*255
@@ -48,15 +50,15 @@ class Creature:
         self.try_reproduce()
 
     def try_reproduce(self):
-        if self.reproduce_cooldown <= 0 and random.random() < 0.0005 and self.current_food >= 75:
+        if self.reproduce_cooldown <= 0 and self.current_food >= 50:
             self.current_food -= 50
-            self.create_offspring(self)
+            self.reproduce.call(self)
             self.reproduce_cooldown = 10
 
     def change_health(self, amount):
         self.health += amount
         if(self.health <= 0):
-            self.kill(self)
+            self.death.call(self)
 
     def get_current_tile(self):
         return self.world.get_tile(self.position[0], self.position[1])
@@ -84,3 +86,5 @@ class Creature:
         self.walk(brain_output[0])
         if(brain_output[2] > 0.4):
             self.eat()
+        if(brain_output[3] > 0.4):
+            self.try_reproduce()

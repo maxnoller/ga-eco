@@ -7,10 +7,10 @@ from creature import Creature
 class Interface:
     """The interface class draws an interfaced used to retreive debug
        information and control the simulation"""
-    def __init__(self, position, dimension, world, creature_manager, clock, display):
+    def __init__(self, position, dimension, world, statistics, clock, display):
         self.rect = pygame.Rect(position[0], position[1], dimension[0], dimension[1])
         self.world = world
-        self.creature_manager = creature_manager
+        self.statistics = statistics
         self.display = display
         self.font = pygame.freetype.SysFont("Calibri", 24)
         self.clock = clock
@@ -32,7 +32,7 @@ class Interface:
 
     def draw_nrof_creatures(self):
         position = (self.rect.topright[0]-40, self.rect.topright[1]+40)
-        self.font.render_to(self.display, position, str(len(self.creature_manager.get_creatures())))
+        self.font.render_to(self.display, position, str(self.statistics.population_statistics))
 
     def draw_creature_details(self, creature):
         """Displays details for the creature currently selected"""

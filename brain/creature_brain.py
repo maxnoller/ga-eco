@@ -5,7 +5,7 @@ from .neural_network import NeuralNetwork
 class Brain:
     def __init__(self, new_network=True):
         self.network = NeuralNetwork()
-        self.network.create_layers(14, [10, 3])
+        self.network.create_layers(14, [10, 4])
     
     @staticmethod
     def from_existing_brain(brain):

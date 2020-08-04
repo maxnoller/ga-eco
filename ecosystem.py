@@ -5,6 +5,7 @@ import time
 from gui.gui import Gui
 from creature import Creature
 from world import World
+from statistics import Statistics
 from creature_manager import CreatureManager
 
 def main_loop():
@@ -41,7 +42,8 @@ if __name__ == "__main__":
     pygame.init()
     world = World(600, 600, 100)
     creature_manager = CreatureManager(world)
+    statistics = Statistics(creature_manager)
     clock = pygame.time.Clock()
-    gui = Gui(1000, 600, creature_manager, world, clock)
+    gui = Gui(1000, 600, creature_manager, world, clock, statistics)
     main_loop()
 
