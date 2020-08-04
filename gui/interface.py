@@ -14,21 +14,27 @@ class Interface:
         self.display = display
         self.font = pygame.freetype.SysFont("Calibri", 24)
         self.clock = clock
+        self.selected = None
+    
+    def set_selected(self, element):
+        if element is not None and self.selected is not element:
+            self.selected = element
 
-    def draw_interface(self, currently_selected):
+    def draw_interface(self):
         """Draws the whole interface on the display"""
         pygame.draw.rect(self.display,
                          (255, 255, 255),
                          self.rect)
-        if isinstance(currently_selected, Creature):
-            self.draw_creature_details(currently_selected)
+        if isinstance(self.selected, Creature):
+            self.draw_creature_details(self.selected)
+        
         self.draw_fps()
         self.draw_nrof_creatures()
 
     def draw_fps(self):
         """Draw a fps counter obtained from pygame onto the interface"""
         position = (self.rect.topright[0]-40, self.rect.topright[1]+10)
-        self.font.render_to(self.display, position, str(int(self.clock.get_fps())))
+        self.fps_rect = self.font.render_to(self.display, position, str(int(self.clock.get_fps())))
 
     def draw_nrof_creatures(self):
         position = (self.rect.topright[0]-40, self.rect.topright[1]+40)
@@ -43,3 +49,7 @@ class Interface:
         self.font.render_to(self.display, position_food, "Food: "+str(int(creature.current_food))+"/100")
         self.font.render_to(self.display, position_health, "Health: "+str(int(creature.health))+"/100")
         return
+
+    def check_click(self, x, y):
+        if self.fps_rect.collidepoint(x, y):
+            return 

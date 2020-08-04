@@ -11,15 +11,15 @@ class Gui:
         self.creature_view = CreatureView(creatures, self.screen, world.tile_size)
         self.world_view = WorldView(world, self.screen)
 
-    def draw(self, currently_selected):
-        self.interface.draw_interface(currently_selected)
+    def draw(self):
+        self.interface.draw_interface()
         self.world_view.draw_world()
         self.creature_view.draw_creatures()
 
-    def check_mouse_click(self, x, y):
+    def mouse_click(self, x, y):
         result = self.creature_view.check_if_creature_clicked(x, y)
         if result is not None:
-            return result
-        return None
-        #else:
-        #    return self.world_view.check_if_tile_clicked(x, y)
+            self.interface.set_selected(result)
+        result = self.interface.check_click(x, y)
+        if result is not None:
+            self.interface.set_selected(result)
