@@ -45,9 +45,11 @@ class Interface:
         position_title = (self.rect.topleft[0]+10, self.rect.topleft[1]+10)
         position_food = (self.rect.topleft[0]+10, self.rect.topleft[1]+30)
         position_health = (self.rect.topleft[0]+10, self.rect.topleft[1]+50)
+        position_generation = (self.rect.topleft[0]+10, self.rect.topleft[1]+70)
         self.font.render_to(self.display, position_title, "Creature")
         self.font.render_to(self.display, position_food, "Food: "+str(int(creature.current_food))+"/100")
         self.font.render_to(self.display, position_health, "Health: "+str(int(creature.health))+"/100")
+        self.font.render_to(self.display, position_generation, "Generation: "+str(creature.information.generation))
         return
 
     def check_click(self, x, y):

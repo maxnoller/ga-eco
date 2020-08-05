@@ -7,8 +7,9 @@ from brain.creature_brain import Brain
 from observer import Observable, Event
 
 class Creature(Observable):
-    def __init__(self, position, dna, world):
+    def __init__(self, position, dna, creature_information, world):
         super().__init__()
+        self.information = creature_information
         self.dna = dna
         self.current_food = dna.max_food
         self.health = dna.max_health
@@ -56,7 +57,7 @@ class Creature(Observable):
             self.current_food -= 75
             self.health -= 50
             self.reproduce.call(self)
-            self.reproduce_cooldown = dna.reproduce_cooldown
+            self.reproduce_cooldown = self.dna.reproduce_cooldown
 
     def change_food(self, amount):
         self.current_food += amount

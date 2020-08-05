@@ -2,6 +2,7 @@ from creature import Creature
 from brain.creature_brain import Brain
 from observer import Observable
 from dna import DNA
+from creature_information import CreatureInformation
 
 class CreatureManager(Observable):
     def __init__(self, world):
@@ -14,10 +15,11 @@ class CreatureManager(Observable):
         for i in range(nrof_creatures):
            self.create_creature()
 
-    def create_creature(self, position=(300,300)):
+    def create_creature(self, position=(300,300), creature_information=CreatureInformation(0, None)):
         """create a creature with default parameters"""
+        information = creature_information
         dna = DNA(100, 100, 3, 10)
-        creature = Creature(position, dna, self.world)
+        creature = Creature(position, dna, information, self.world)
         self.register(creature)
         return creature
 
@@ -45,11 +47,13 @@ class CreatureManager(Observable):
         return self.creatures
 
     def update_creatures(self, delta_time):
-        if(len(self.creatures) < 40):
-            self.create_creatures(40-(len(self.creatures)))
+        if(len(self.creatures) < 100):
+            self.create_creatures(100-(len(self.creatures)))
         for creature in self.creatures:
             creature.update(delta_time)
 
     def create_offspring(self, creature):
-        offspring = self.create_creature(position=creature.position)
+        creature_information = CreatureInformation(creature.information.generation+1, creature)
+        offspring = self.create_creature(position=creature.position, creature_information=creature_information)
         offspring.brain = Brain.from_existing_brain(creature.brain)
+        offspring.brain.mutate()

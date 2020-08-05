@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 from .neural_network import NeuralNetwork
 
@@ -12,6 +13,16 @@ class Brain:
         new_brain = Brain(new_network=False)
         new_brain.network = NeuralNetwork.from_network(brain.network)
         return new_brain
+
+    def mutate(self):
+        print("mutating")
+        for layer in self.network.layers:
+            for weight in layer.weights:
+                if random.random() < 0.05:
+                    weight += random.uniform(-1, 1) * weight
+            for bias in layer.biases:
+                if random.random() < 0.05:
+                    bias += random.uniform(-1, 1) * bias
 
     def process_input(self, tiles, hunger, health):
         return self.network.forward_pass(np.array([tiles[0][0],
