@@ -1,6 +1,6 @@
 from creature import Creature
 from brain.creature_brain import Brain
-from observer import Observable, Observer
+from observer import Observable
 
 class CreatureManager(Observable):
     def __init__(self, world):
@@ -13,9 +13,9 @@ class CreatureManager(Observable):
         for i in range(nrof_creatures):
            self.create_creature()
 
-    def create_creature(self):
+    def create_creature(self, position=(300,300)):
         """create a creature with default parameters"""
-        creature = Creature(100, 10, 3, self.world)
+        creature = Creature(position, 100, 10, 3, self.world)
         self.register(creature)
         return creature
 
@@ -27,7 +27,7 @@ class CreatureManager(Observable):
 
     def unregister(self, creature):
         creature.reproduce.unregister(self.create_offspring)
-        creature.death.unregister(self.create_offspring)
+        creature.death.unregister(self.handle_death)
         self.creatures.remove(creature)
 
     def handle_death(self, creature):
@@ -35,7 +35,7 @@ class CreatureManager(Observable):
         try:
             self.unregister(creature)
             self.notify()
-        except ValueError:
+        except ValueError as e:
             print("Tried removing unregistered creature from creature_manager")
 
     def get_creatures(self):
@@ -49,5 +49,5 @@ class CreatureManager(Observable):
             creature.update(delta_time)
 
     def create_offspring(self, creature):
-        offspring = self.create_creature()
+        offspring = self.create_creature(position=creature.position)
         offspring.brain = Brain.from_existing_brain(creature.brain)

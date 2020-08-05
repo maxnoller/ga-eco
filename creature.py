@@ -7,56 +7,66 @@ from brain.creature_brain import Brain
 from observer import Observable, Event
 
 class Creature(Observable):
-    def __init__(self, max_health, hunger_damage, hunger, world):
+    def __init__(self, position, dna, world):
         super().__init__()
-        #hunger damage per second
-        self.health = max_health
-        self.hunger_damage = hunger_damage
-        self.hunger = hunger
-        self.current_food = 100
-        self.position = (300, 300)
+        self.dna = dna
+        self.current_food = dna.max_food
+        self.health = dna.max_health
+        self.reproduce_cooldown = dna.reproduce_cooldown
+        self.position = position
         self.rotation = 90
         self.world = world
         self.brain = Brain(self)
-        self.speed_modifier = 0.7
-        self.reproduce_cooldown = 10
         self.death = Event()
         self.reproduce = Event()
 
     def get_color(self):
-        color_value = (self.health/100)*255
-        return (color_value, color_value/2, color_value/2)
+        return self.dna.color
 
     def walk(self, speed):
-        walk_cords = GuiHelperFunctions.pol2cart(speed*self.speed_modifier, self.rotation)
+        walk_cords = GuiHelperFunctions.pol2cart(speed*self.dna.speed_modifier, self.rotation)
         if(self.world.can_move((self.position[0] + walk_cords[0], self.position[1] + walk_cords[1]))):
             self.position = (self.position[0] + walk_cords[0], self.position[1] + walk_cords[1])
-            self.current_food -= speed * self.speed_modifier * 1.5
+            self.change_food(-speed * self.dna.speed_modifier * 1.5)
     
     def eat(self):
         if self.world.try_eat(self.position):
-            self.current_food += 10
-            if(self.current_food > 100):
-                self.current_food = 100
+            self.change_food(10)
 
     def update(self, delta_time):
         self.execute_brain()
-        if self.current_food <= 0:
-            self.current_food = 0
-            self.change_health(-self.hunger_damage * (delta_time/1000))
-            return
-        self.current_food -= self.hunger * (delta_time/1000)
+        self.current_food -= self.dna.hunger * (delta_time/1000)
+        self.regenerate()
+        self.hunger_damage(delta_time)
         self.reproduce_cooldown -= (delta_time/1000)
         self.try_reproduce()
 
+    def hunger_damage(self, delta_time):
+        if self.current_food <= 0:
+            self.current_food = 0
+            self.change_health(-self.dna.hunger_damage * (delta_time/1000))
+    
+    def regenerate(self):
+        if self.current_food >= 90:
+            self.change_health(10)
+            self.change_food(-10)
+
     def try_reproduce(self):
-        if self.reproduce_cooldown <= 0 and self.current_food >= 50:
-            self.current_food -= 50
+        if self.reproduce_cooldown <= 0 and self.current_food >= 75:
+            self.current_food -= 75
+            self.health -= 50
             self.reproduce.call(self)
-            self.reproduce_cooldown = 10
+            self.reproduce_cooldown = dna.reproduce_cooldown
+
+    def change_food(self, amount):
+        self.food += amount
+        if self.food > 100:
+            self.food = 100
 
     def change_health(self, amount):
         self.health += amount
+        if(self.health > 100):
+            self.health = 100
         if(self.health <= 0):
             self.death.call(self)
 
