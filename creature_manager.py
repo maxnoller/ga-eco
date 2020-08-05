@@ -1,6 +1,7 @@
 from creature import Creature
 from brain.creature_brain import Brain
 from observer import Observable
+from dna import DNA
 
 class CreatureManager(Observable):
     def __init__(self, world):
@@ -15,7 +16,8 @@ class CreatureManager(Observable):
 
     def create_creature(self, position=(300,300)):
         """create a creature with default parameters"""
-        creature = Creature(position, 100, 10, 3, self.world)
+        dna = DNA(100, 100, 3, 10)
+        creature = Creature(position, dna, self.world)
         self.register(creature)
         return creature
 

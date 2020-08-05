@@ -59,9 +59,9 @@ class Creature(Observable):
             self.reproduce_cooldown = dna.reproduce_cooldown
 
     def change_food(self, amount):
-        self.food += amount
-        if self.food > 100:
-            self.food = 100
+        self.current_food += amount
+        if self.current_food > 100:
+            self.current_food = 100
 
     def change_health(self, amount):
         self.health += amount
