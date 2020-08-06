@@ -1,3 +1,5 @@
+import random
+
 from creature import Creature
 from brain.creature_brain import Brain
 from observer import Observable
@@ -15,8 +17,9 @@ class CreatureManager(Observable):
         for i in range(nrof_creatures):
            self.create_creature()
 
-    def create_creature(self, position=(300,300), creature_information=CreatureInformation(0, None)):
+    def create_creature(self, position=None, creature_information=CreatureInformation(0, None)):
         """create a creature with default parameters"""
+        if(position is None): position = (random.uniform(0, 600), random.uniform(0, 600))
         information = creature_information
         dna = DNA(100, 100, 3, 10)
         creature = Creature(position, dna, information, self.world)

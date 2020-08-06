@@ -35,6 +35,9 @@ class Interface:
         """Draw a fps counter obtained from pygame onto the interface"""
         position = (self.rect.topright[0]-40, self.rect.topright[1]+10)
         self.fps_rect = self.font.render_to(self.display, position, str(int(self.clock.get_fps())))
+        #if self.fps_rect.collidepoint(pygame.mouse.get_pos()):
+        #    print("hit")
+        #    self.font.render_to(self.display, pygame.mouse.get_pos(), "FPS")
 
     def draw_nrof_creatures(self):
         position = (self.rect.topright[0]-40, self.rect.topright[1]+40)

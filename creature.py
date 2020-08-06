@@ -93,7 +93,7 @@ class Creature(Observable):
         brain_output = self.brain.process_input(self.see(),
                                                 self.current_food,
                                                 self.health)
-        self.rotation = brain_output[1]*180/3.1415 # output from rad to degree
+        self.rotation = np.rad2deg(brain_output[1]*2*3.1415)
         self.walk(brain_output[0])
         if(brain_output[2] > 0.4):
             self.eat()
