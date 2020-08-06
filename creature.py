@@ -4,59 +4,72 @@ import random
 from dna import DNA
 from gui.helper_functions import GuiHelperFunctions
 from brain.creature_brain import Brain
+from observer import Observable, Event
 
-class Creature:
-    def __init__(self, max_health, hunger_damage, hunger, world, handle_death, create_offspring):
-        #hunger damage per second
-        self.health = max_health
-        self.hunger_damage = hunger_damage
-        self.hunger = hunger
-        self.current_food = 100
-        self.position = (300, 300)
+class Creature(Observable):
+    def __init__(self, position, dna, creature_information, world):
+        super().__init__()
+        self.information = creature_information
+        self.dna = dna
+        self.current_food = dna.max_food
+        self.health = dna.max_health
+        self.reproduce_cooldown = dna.reproduce_cooldown
+        self.position = position
         self.rotation = 90
         self.world = world
         self.brain = Brain(self)
-        self.speed_modifier = 1
-        self.kill = handle_death
-        self.create_offspring = create_offspring
-        self.reproduce_cooldown = 10
+        self.death = Event()
+        self.reproduce = Event()
 
     def get_color(self):
-        color_value = (self.health/100)*255
-        return (color_value, color_value/2, color_value/2)
+        return self.dna.color
 
     def walk(self, speed):
-        walk_cords = GuiHelperFunctions.pol2cart(speed*self.speed_modifier, self.rotation)
+        walk_cords = GuiHelperFunctions.pol2cart(speed*self.dna.speed_modifier, self.rotation)
         if(self.world.can_move((self.position[0] + walk_cords[0], self.position[1] + walk_cords[1]))):
             self.position = (self.position[0] + walk_cords[0], self.position[1] + walk_cords[1])
-            self.current_food -= speed
+            self.change_food(-speed * self.dna.speed_modifier * 1.5)
     
     def eat(self):
         if self.world.try_eat(self.position):
-            self.current_food += 10
-            if(self.current_food > 100):
-                self.current_food = 100
+            self.change_food(10)
 
     def update(self, delta_time):
         self.execute_brain()
-        if self.current_food <= 0:
-            self.current_food = 0
-            self.change_health(-self.hunger_damage * (delta_time/1000))
-            return
-        self.current_food -= self.hunger * (delta_time/1000)
+        self.current_food -= self.dna.hunger * (delta_time/1000)
+        self.regenerate()
+        self.hunger_damage(delta_time)
         self.reproduce_cooldown -= (delta_time/1000)
         self.try_reproduce()
 
+    def hunger_damage(self, delta_time):
+        if self.current_food <= 0:
+            self.current_food = 0
+            self.change_health(-self.dna.hunger_damage * (delta_time/1000))
+    
+    def regenerate(self):
+        if self.current_food >= 90:
+            self.change_health(10)
+            self.change_food(-10)
+
     def try_reproduce(self):
-        if self.reproduce_cooldown <= 0 and random.random() < 0.0005 and self.current_food >= 75:
-            self.current_food -= 50
-            self.create_offspring(self)
-            self.reproduce_cooldown = 10
+        if self.reproduce_cooldown <= 0 and self.current_food >= 75:
+            self.current_food -= 75
+            self.health -= 50
+            self.reproduce.call(self)
+            self.reproduce_cooldown = self.dna.reproduce_cooldown
+
+    def change_food(self, amount):
+        self.current_food += amount
+        if self.current_food > 100:
+            self.current_food = 100
 
     def change_health(self, amount):
         self.health += amount
+        if(self.health > 100):
+            self.health = 100
         if(self.health <= 0):
-            self.kill(self)
+            self.death.call(self)
 
     def get_current_tile(self):
         return self.world.get_tile(self.position[0], self.position[1])
@@ -84,3 +97,5 @@ class Creature:
         self.walk(brain_output[0])
         if(brain_output[2] > 0.4):
             self.eat()
+        if(brain_output[3] > 0.4):
+            self.try_reproduce()

@@ -1,4 +1,6 @@
 import inspect
+import numpy as np
+import noise
 
 from tiles.world_tile import WorldTile
 from tiles.border_tile import BorderTile
@@ -12,7 +14,7 @@ class World:
         self.world = []
         self.width = nrof_tiles
         self.height = nrof_tiles
-        self.create_tiles()
+        self.noise_to_tiles()
 
     def update(self, delta_time):
         for x in self.world:
@@ -23,11 +25,42 @@ class World:
         for x in range(self.width):
             y_list = []
             for y in range(self.height):
-                tile = FoodTile(100, 10)
+                tile = FoodTile(100, 5)
                 if x == (self.width-1) or x == 0 or y == 0 or y == (self.height-1):
                     tile = BorderTile()
                 y_list.append(tile)
             self.world.append(y_list)
+
+    def noise_to_tiles(self):
+        noise = self.noisemap()
+        self.world = []
+        for x in range(self.width):
+            y_list = []
+            for y in range(self.height):
+                if x == (self.width-1) or x == 0 or y == 0 or y == (self.height-1):
+                    y_list.append(BorderTile())
+                elif noise[x][y] < -0.05:
+                   y_list.append(WaterTile())
+                else:
+                    y_list.append(FoodTile(100, 5))
+            self.world.append(y_list)
+
+
+    def noisemap(self, scale=10, octaves=6, persistence=0.5, lacunarity=2.0):
+        shape = (self.width, self.height)
+        seed = np.random.randint(0,100)
+        world_noise = np.zeros(shape)
+        for i in range(shape[0]):
+            for j in range(shape[1]):
+                world_noise[i][j] = noise.pnoise2(i/scale,
+                                                  j/scale,
+                                                  octaves=octaves,
+                                                  persistence=persistence,
+                                                  lacunarity=lacunarity,
+                                                  repeatx=1024,
+                                                  repeaty=1024,
+                                                  base=seed)
+        return world_noise
 
     def get_tile(self, position):
         x = int(position[0]//self.tile_size)
