@@ -15,7 +15,6 @@ class Brain:
         return new_brain
 
     def mutate(self):
-        print("mutating")
         for layer in self.network.layers:
             for weight in layer.weights:
                 if random.random() < 0.05:

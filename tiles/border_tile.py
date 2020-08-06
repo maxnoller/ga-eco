@@ -5,7 +5,7 @@ class BorderTile(WorldTile):
         pass
 
     def get_color(self):
-        return (255, 255, 255)
+        return (255, 0, 0)
     
     def __str__(self):
         return "BT"
