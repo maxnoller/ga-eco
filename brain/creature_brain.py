@@ -6,7 +6,7 @@ from .neural_network import NeuralNetwork
 class Brain:
     def __init__(self, new_network=True):
         self.network = NeuralNetwork()
-        self.network.create_layers(14, [10, 4])
+        self.network.create_layers(15, [20, 4])
     
     @staticmethod
     def from_existing_brain(brain):
@@ -23,7 +23,7 @@ class Brain:
                 if random.random() < 0.03:
                     bias += random.uniform(-1, 1) * bias
 
-    def process_input(self, tiles, hunger, health):
+    def process_input(self, tiles, close_creatures, hunger, health):
         return self.network.forward_pass(np.array([tiles[0][0],
                                                    tiles[0][1],
                                                    tiles[0][2],
@@ -36,5 +36,6 @@ class Brain:
                                                    tiles[3][0],
                                                    tiles[3][1],
                                                    tiles[3][2],
+                                                   close_creatures,
                                                    hunger, 
                                                    health]))

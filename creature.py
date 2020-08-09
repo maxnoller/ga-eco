@@ -20,6 +20,7 @@ class Creature(Observable):
         self.brain = Brain(self)
         self.death = Event()
         self.reproduce = Event()
+        self.close_creatures = 0
 
     def get_color(self):
         return self.dna.color
@@ -91,6 +92,7 @@ class Creature(Observable):
 
     def execute_brain(self):
         brain_output = self.brain.process_input(self.see(),
+                                                self.close_creatures,
                                                 self.current_food,
                                                 self.health)
         self.rotation = np.rad2deg(brain_output[1]*2*3.1415)

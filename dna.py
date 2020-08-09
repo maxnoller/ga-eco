@@ -7,5 +7,6 @@ class DNA:
         self.speed_modifier = 0.7
         self.reproduce_cooldown = 15
         self.color = (255, 255, 255)
+        self.sense_distance = 20
 
     

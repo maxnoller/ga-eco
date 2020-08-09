@@ -1,4 +1,5 @@
 import random
+import math
 
 from creature import Creature
 from brain.creature_brain import Brain
@@ -53,7 +54,19 @@ class CreatureManager(Observable):
         if(len(self.creatures) < 100):
             self.create_creatures(100-(len(self.creatures)))
         for creature in self.creatures:
+            self.get_close_creatures(creature)
             creature.update(delta_time)
+
+    def get_close_creatures(self, creature):
+        creature.close_creatures = 0
+        for current_creature in self.creatures:
+            if creature is current_creature: continue
+            if (abs(current_creature.position[0] - creature.position[0]) > creature.dna.sense_distance
+               or abs(current_creature.position[1] - creature.position[1]) > creature.dna.sense_distance):
+                continue
+            if math.sqrt((current_creature.position[0] - creature.position[0])**2 +
+                         (current_creature.position[1] - creature.position[1])**2 ) <= creature.dna.sense_distance:
+                creature.close_creatures += 1
 
     def create_offspring(self, creature):
         creature_information = CreatureInformation(creature.information.generation+1, creature)
