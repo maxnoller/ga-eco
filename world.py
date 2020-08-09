@@ -9,8 +9,8 @@ from tiles.food_tile import FoodTile
 
 
 class World:
-    def __init__(self, width, height, nrof_tiles):
-        self.tile_size = height//nrof_tiles
+    def __init__(self, position, nrof_tiles):
+        self.tile_size = position[1]//nrof_tiles
         self.world = []
         self.width = nrof_tiles
         self.height = nrof_tiles
@@ -20,16 +20,6 @@ class World:
         for x in self.world:
             for tile in x:
                 tile.update(delta_time)
-    
-    def create_tiles(self):
-        for x in range(self.width):
-            y_list = []
-            for y in range(self.height):
-                tile = FoodTile(100, 5)
-                if x == (self.width-1) or x == 0 or y == 0 or y == (self.height-1):
-                    tile = BorderTile()
-                y_list.append(tile)
-            self.world.append(y_list)
 
     def noise_to_tiles(self):
         noise = self.noisemap()
@@ -46,7 +36,7 @@ class World:
             self.world.append(y_list)
 
 
-    def noisemap(self, scale=10, octaves=6, persistence=0.5, lacunarity=2.0):
+    def noisemap(self, scale=25, octaves=2, persistence=0.5, lacunarity=2.0):
         shape = (self.width, self.height)
         seed = np.random.randint(0,100)
         world_noise = np.zeros(shape)

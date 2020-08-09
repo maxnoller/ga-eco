@@ -7,6 +7,7 @@ from creature import Creature
 from world import World
 from statistics import Statistics
 from creature_manager import CreatureManager
+from simulation_parameters import SimulationParameters
 
 def main_loop():
     done = False
@@ -27,7 +28,7 @@ def main_loop():
                     gui.mouse_click(pos[0], pos[1])
 
         current_ticks = pygame.time.get_ticks()
-        delta_time = current_ticks - last_time
+        delta_time = (current_ticks - last_time) 
         last_time = current_ticks
 
         creature_manager.update_creatures(delta_time)
@@ -39,10 +40,11 @@ def main_loop():
 
 if __name__ == "__main__":
     pygame.init()
-    world = World(600, 600, 100)
+    parameters = SimulationParameters()
+    world = World(parameters.options["world_pixel_size"], parameters.options["world_nrof_tiles"])
     creature_manager = CreatureManager(world)
     statistics = Statistics(creature_manager)
     clock = pygame.time.Clock()
     gui = Gui(1000, 600, creature_manager, world, clock, statistics)
-    main_loop()
+    cProfile.run("main_loop()")
 

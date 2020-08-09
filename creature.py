@@ -28,7 +28,7 @@ class Creature(Observable):
         walk_cords = GuiHelperFunctions.pol2cart(speed*self.dna.speed_modifier, self.rotation)
         if(self.world.can_move((self.position[0] + walk_cords[0], self.position[1] + walk_cords[1]))):
             self.position = (self.position[0] + walk_cords[0], self.position[1] + walk_cords[1])
-            self.change_food(-speed * self.dna.speed_modifier * 1.5)
+        self.change_food(-speed * self.dna.speed_modifier * 2)
     
     def eat(self):
         if self.world.try_eat(self.position):
@@ -36,7 +36,7 @@ class Creature(Observable):
 
     def update(self, delta_time):
         self.execute_brain()
-        self.current_food -= self.dna.hunger * (delta_time/1000)
+        #self.current_food -= self.dna.hunger * (delta_time/1000)
         self.regenerate()
         self.hunger_damage(delta_time)
         self.reproduce_cooldown -= (delta_time/1000)
@@ -54,8 +54,8 @@ class Creature(Observable):
 
     def try_reproduce(self):
         if self.reproduce_cooldown <= 0 and self.current_food >= 75:
-            self.current_food -= 75
-            self.health -= 50
+            self.current_food -= 50
+            self.health -= 25
             self.reproduce.call(self)
             self.reproduce_cooldown = self.dna.reproduce_cooldown
 

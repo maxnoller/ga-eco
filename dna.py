@@ -5,7 +5,7 @@ class DNA:
         self.hunger = hunger_loss
         self.hunger_damage = hunger_damage
         self.speed_modifier = 0.7
-        self.reproduce_cooldown = 20
+        self.reproduce_cooldown = 15
         self.color = (255, 255, 255)
 
     

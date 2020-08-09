@@ -17,10 +17,10 @@ class Brain:
     def mutate(self):
         for layer in self.network.layers:
             for weight in layer.weights:
-                if random.random() < 0.01:
+                if random.random() < 0.03:
                     weight += random.uniform(-1, 1) * weight
             for bias in layer.biases:
-                if random.random() < 0.01:
+                if random.random() < 0.03:
                     bias += random.uniform(-1, 1) * bias
 
     def process_input(self, tiles, hunger, health):
