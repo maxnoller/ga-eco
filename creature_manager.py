@@ -1,5 +1,6 @@
 import random
 import math
+from numba import jit
 
 from creature import Creature
 from brain.creature_brain import Brain
@@ -8,8 +9,9 @@ from dna import DNA
 from creature_information import CreatureInformation
 
 class CreatureManager(Observable):
-    def __init__(self, world):
+    def __init__(self, nrof_creatures, world):
         super().__init__()
+        self.nrof_creatures = nrof_creatures
         self.world = world
         self.creatures = []
 
@@ -51,8 +53,8 @@ class CreatureManager(Observable):
         return self.creatures
 
     def update_creatures(self, delta_time):
-        if(len(self.creatures) < 100):
-            self.create_creatures(100-(len(self.creatures)))
+        if(len(self.creatures) < self.nrof_creatures):
+            self.create_creatures(self.nrof_creatures-(len(self.creatures)))
         for creature in self.creatures:
             self.get_close_creatures(creature)
             creature.update(delta_time)

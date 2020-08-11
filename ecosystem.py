@@ -11,7 +11,6 @@ from simulation_parameters import SimulationParameters
 
 def main_loop():
     done = False
-    creature_manager.create_creatures(100)
 
     last_time = 0
     start_time = time.time()
@@ -42,7 +41,7 @@ if __name__ == "__main__":
     pygame.init()
     parameters = SimulationParameters()
     world = World(parameters.options["world_pixel_size"], parameters.options["world_nrof_tiles"])
-    creature_manager = CreatureManager(world)
+    creature_manager = CreatureManager(parameters.options["nrof_creatures"], world)
     statistics = Statistics(creature_manager)
     clock = pygame.time.Clock()
     gui = Gui(1000, 600, creature_manager, world, clock, statistics)

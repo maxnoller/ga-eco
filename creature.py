@@ -37,7 +37,7 @@ class Creature(Observable):
 
     def update(self, delta_time):
         self.execute_brain()
-        #self.current_food -= self.dna.hunger * (delta_time/1000)
+        self.current_food -= self.dna.hunger * (delta_time/1000)
         self.regenerate()
         self.hunger_damage(delta_time)
         self.reproduce_cooldown -= (delta_time/1000)
