@@ -35,7 +35,6 @@ class World:
                     y_list.append(FoodTile(100, 5))
             self.world.append(y_list)
 
-
     def noisemap(self, scale=25, octaves=2, persistence=0.5, lacunarity=2.0):
         shape = (self.width, self.height)
         seed = np.random.randint(0,100)
