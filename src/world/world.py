@@ -2,10 +2,10 @@ import inspect
 import numpy as np
 import noise
 
-from tiles.world_tile import WorldTile
-from tiles.border_tile import BorderTile
-from tiles.water_tile import WaterTile
-from tiles.food_tile import FoodTile
+from .tiles.world_tile import WorldTile
+from .tiles.border_tile import BorderTile
+from .tiles.water_tile import WaterTile
+from .tiles.food_tile import FoodTile
 
 
 class World:

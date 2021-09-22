@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from numba import jit
+from functools import lru_cache
 
 @jit(nopython=True)
 def ReLU(input):
